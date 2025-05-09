@@ -1,5 +1,5 @@
 const form = document.getElementById('form')
-const firstname_input = document.getElementById('firstname-input')
+const username_input = document.getElementById('username-input')
 const email_input = document.getElementById('email-input')
 const password_input = document.getElementById('password-input')
 const repeat_password_input = document.getElementById('repeat-password-input')
@@ -8,13 +8,13 @@ const phone_input = document.getElementById('phone-input')
 
 form.addEventListener('submit', (e) => {
   let errors = []
-  if(firstname_input){
-    // If we have a firstname input then we are in the signup
-    errors = getSignupFormErrors(firstname_input.value, email_input.value, phone_input.value, password_input.value, repeat_password_input.value)
+  if(username_input){
+    // If we have a username input then we are in the signup
+    errors = getSignupFormErrors(username_input.value, email_input.value, phone_input.value, password_input.value, repeat_password_input.value)
   
   }
   else{
-    // If we don't have a firstname input then we are in the login
+    // If we don't have a username input then we are in the login
     errors = getLoginFormErrors(email_input.value, password_input.value)
   }
 
@@ -25,12 +25,12 @@ form.addEventListener('submit', (e) => {
   }
 })
 
-function getSignupFormErrors(firstname, email, phoneNumber, password, repeatPassword,){
+function getSignupFormErrors(username, email, phoneNumber, password, repeatPassword,){
   let errors = []
 
-  if(firstname === '' || firstname == null){
-    errors.push('Firstname is required')
-    firstname_input.parentElement.classList.add('incorrect')
+  if(username === '' || username == null){
+    errors.push('username is required')
+    username_input.parentElement.classList.add('incorrect')
   }
   if(email === '' || email == null){
     errors.push('Email is required')
@@ -87,7 +87,7 @@ function getLoginFormErrors(email, password){
   return errors;
 }
 
-const allInputs = [firstname_input, email_input, phone_input, password_input, repeat_password_input].filter(input => input != null)
+const allInputs = [username_input, email_input, phone_input, password_input, repeat_password_input].filter(input => input != null)
 
 allInputs.forEach(input => {
   input.addEventListener('input', () => {
