@@ -187,6 +187,11 @@ a:hover{
     animation: fade-out 0.5s ease forwards;
   }
 }
+@media(max-height: 1000px){
+  .image-container svg,.image-container h1{
+    top: 5dvh;
+  }
+}
 form div.incorrect label{
   background-color: #f06272;
 }
