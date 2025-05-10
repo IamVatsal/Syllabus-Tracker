@@ -1,16 +1,17 @@
 const form = document.getElementById('form')
 const username_input = document.getElementById('username-input')
 const email_input = document.getElementById('email-input')
+const phone_input = document.getElementById('phone-input')
+const enroll_input = document.getElementById('enroll-input')
 const password_input = document.getElementById('password-input')
 const repeat_password_input = document.getElementById('repeat-password-input')
 const error_message = document.getElementById('error-message')
-const phone_input = document.getElementById('phone-input')
 
 form.addEventListener('submit', (e) => {
   let errors = []
   if(username_input){
     // If we have a username input then we are in the signup
-    errors = getSignupFormErrors(username_input.value, email_input.value, phone_input.value, password_input.value, repeat_password_input.value)
+    errors = getSignupFormErrors(username_input.value, email_input.value, phone_input.value, enroll_input.value, password_input.value, repeat_password_input.value)
   
   }
   else{
@@ -25,7 +26,7 @@ form.addEventListener('submit', (e) => {
   }
 })
 
-function getSignupFormErrors(username, email, phoneNumber, password, repeatPassword,){
+function getSignupFormErrors(username, email, phoneNumber, enroll, password, repeatPassword,){
   let errors = []
 
   if(username === '' || username == null){
@@ -68,6 +69,10 @@ function getSignupFormErrors(username, email, phoneNumber, password, repeatPassw
     errors.push('Phone number must start with 6, 7, 8 or 9')
     phone_input.parentElement.classList.add('incorrect')
   }
+  if(enroll.length != 11){
+    errors.push('Enrollment number must be 11 digits')
+    enroll_input.parentElement.classList.add('incorrect')
+  }
 
   return errors;
 }
@@ -87,7 +92,7 @@ function getLoginFormErrors(email, password){
   return errors;
 }
 
-const allInputs = [username_input, email_input, phone_input, password_input, repeat_password_input].filter(input => input != null)
+const allInputs = [username_input, email_input, phone_input, enroll_input, password_input, repeat_password_input].filter(input => input != null)
 
 allInputs.forEach(input => {
   input.addEventListener('input', () => {
