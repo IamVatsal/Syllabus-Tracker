@@ -66,10 +66,7 @@ form.addEventListener('submit', (e) => {
         window.location.href = "index.html";
       }
       else{
-        // Redirect to the index page if login is successful
         e.preventDefault(); // Prevent form submission if login fails
-        window.location.href = "index.html";
-
       }
     }
     else{
