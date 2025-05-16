@@ -7,12 +7,28 @@ const password_input = document.getElementById('password-input')
 const repeat_password_input = document.getElementById('repeat-password-input')
 const error_message = document.getElementById('error-message')
 
+let users = []
+if(localStorage.getItem('users') != null){
+  // If we have users in local storage then we parse them
+  users = JSON.parse(localStorage.getItem('users'))
+}
+if(users.length > 0){
+  // If we have users in local storage then we set the email input to the first user
+  email_input.value = users[0].email
+  password_input.value = users[0].password
+}
+// If we have a username input then we are in the signup
+if(username_input){
+  // If we have a username input then we are in the signup
+  form.setAttribute('action', 'signup.html')
+}
+
+
 form.addEventListener('submit', (e) => {
   let errors = []
   if(username_input){
     // If we have a username input then we are in the signup
     errors = getSignupFormErrors(username_input.value, email_input.value, phone_input.value, enroll_input.value, password_input.value, repeat_password_input.value)
-  
   }
   else{
     // If we don't have a username input then we are in the login
@@ -90,6 +106,35 @@ function getLoginFormErrors(email, password){
   }
 
   return errors;
+}
+
+function registerUser(userData){
+  // Check if the user already exists
+  const userExists = users.find(user => user.email === userData.email)
+  if(userExists){
+    error_message.innerText = 'User already exists'
+    email_input.parentElement.classList.add('incorrect')
+    return false
+  }
+  else{
+    // Add the user to the users array
+    users.push(userData)
+    return true
+  }
+}
+
+function loginUser(userData){
+  // Check if the user exists
+  const user = users.find(user => user.email === userData.email && user.password === userData.password)
+  if(user){
+    return true
+  }
+  else{
+    error_message.innerText = 'Invalid email or password'
+    email_input.parentElement.classList.add('incorrect')
+    password_input.parentElement.classList.add('incorrect')
+    return false
+  }
 }
 
 const allInputs = [username_input, email_input, phone_input, enroll_input, password_input, repeat_password_input].filter(input => input != null)
