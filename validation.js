@@ -12,33 +12,69 @@ if(localStorage.getItem('users') != null){
   // If we have users in local storage then we parse them
   users = JSON.parse(localStorage.getItem('users'))
 }
-if(users.length > 0){
-  // If we have users in local storage then we set the email input to the first user
-  email_input.value = users[0].email
-  password_input.value = users[0].password
-}
-// If we have a username input then we are in the signup
-if(username_input){
-  // If we have a username input then we are in the signup
-  form.setAttribute('action', 'signup.html')
-}
 
 
 form.addEventListener('submit', (e) => {
-  let errors = []
-  if(username_input){
-    // If we have a username input then we are in the signup
-    errors = getSignupFormErrors(username_input.value, email_input.value, phone_input.value, enroll_input.value, password_input.value, repeat_password_input.value)
-  }
-  else{
-    // If we don't have a username input then we are in the login
-    errors = getLoginFormErrors(email_input.value, password_input.value)
+  let errors = [];
+  if (username_input) {
+    // If we have a username input, we are in the signup
+    errors = getSignupFormErrors(
+      username_input.value,
+      email_input.value,
+      phone_input.value,
+      enroll_input.value,
+      password_input.value,
+      repeat_password_input.value
+    );
+  } else {
+    // If we don't have a username input, we are in the login
+    errors = getLoginFormErrors(email_input.value, password_input.value);
   }
 
-  if(errors.length > 0){
+  if (errors.length > 0) {
     // If there are any errors
-    e.preventDefault()
-    error_message.innerText  = errors.join(". ")
+    e.preventDefault();
+    error_message.innerText = errors.join(". ");
+  } else {
+    // Call loginUser if no errors
+    if(window.location.pathname.slice(-11) == 'signup.html'){
+      // If we are in the signup page
+      const userData = {
+        username: username_input.value,
+        email: email_input.value,
+        phoneNumber: phone_input.value,
+        enroll: enroll_input.value,
+        password: password_input.value,
+      };
+      const registerSuccess = registerUser(userData);
+      if (registerSuccess) {
+        localStorage.setItem('users', JSON.stringify(users))
+        window.location.href = "index.html";
+      } else {
+        e.preventDefault(); // Prevent form submission if registration fails
+      }
+    }else if(window.location.pathname.slice(-10) == 'login.html'){
+      // If we are in the login page
+      const userData = {
+        email: email_input.value,
+        password: password_input.value,
+      };
+      console.log("User data:", userData);
+      const loginSuccess = loginUser(userData);
+      e.preventDefault(); // Always prevent default for SPA-like behavior
+      if (loginSuccess) {
+        window.location.href = "index.html";
+      }
+      else{
+        // Redirect to the index page if login is successful
+        e.preventDefault(); // Prevent form submission if login fails
+        window.location.href = "index.html";
+
+      }
+    }
+    else{
+      console.log('Unknown page');
+    }
   }
 })
 
@@ -119,21 +155,28 @@ function registerUser(userData){
   else{
     // Add the user to the users array
     users.push(userData)
+    localStorage.setItem('users', JSON.stringify(users))
     return true
   }
 }
 
-function loginUser(userData){
-  // Check if the user exists
-  const user = users.find(user => user.email === userData.email && user.password === userData.password)
-  if(user){
-    return true
-  }
-  else{
-    error_message.innerText = 'Invalid email or password'
-    email_input.parentElement.classList.add('incorrect')
-    password_input.parentElement.classList.add('incorrect')
-    return false
+function loginUser(userData) {
+  console.log("Attempting login with:", userData);
+  console.log(userData);
+  const user = users.find(
+    (user) =>
+      user.email === userData.email && user.password === userData.password
+  );
+  if (user) {
+    console.log("Login successful, redirecting...");
+    // window.location.href = "index.html";
+    return true;
+  } else {
+    console.log("Login failed: Invalid email or password");
+    error_message.innerText = "Invalid email or password";
+    email_input.parentElement.classList.add("incorrect");
+    password_input.parentElement.classList.add("incorrect");
+    return false;
   }
 }
 
